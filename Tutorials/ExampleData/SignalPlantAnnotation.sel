@@ -1,0 +1,15 @@
+%SignalPlant ver.:1.2.6.5
+%Selection export from file:
+%ASSOCIATED_FILE_NAME.EXAMPLE
+%SAMPLING_FREQ [Hz]:5000
+%CHANNELS_VALIDITY-----------------------
+%Channel_name1	1
+%Channel_name2	1
+%----------------------------------------
+%Structure:
+%Index[-], Start[sample], End[sample], Group[-], Validity[-], Channel Index[-], Channel name[string], Info[string]
+%Divided by: ASCII char no. 9
+%DATA------------------------------------
+1	1058445	1065074	0	0.00000	0	%Channel_name1	This is comment for annotation 1
+2	1058270	1066470	0	0.00000	1	%Channel_name2	This is comment for annotation 2
+3	1057980	1066179	0	0.00000	1	%Channel_name2	Columns are separated by char. no 9 (tab) - this can be specified in header.

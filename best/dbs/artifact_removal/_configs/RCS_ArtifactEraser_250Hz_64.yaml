@@ -1,0 +1,30 @@
+MODEL:
+  ARCHITECTURE:
+    N_FILTERS: 64
+    FS: 250
+  MODEL: best.dbs.artifact_removal.model.dbs_artifact_removal_network
+NAME: RCS_ArtifactEraser_100k
+TRAIN:
+  BASE_LR: 0.0002
+  BATCH_SIZE: 128
+  BETA_1: 0.5
+  CPU_COUNT_LOADERS: 16
+  DATASET: best.dbs.artifact_removal.dataset.StimArtifactDataset
+  DECAY_FACTOR: 0.1
+  DECAY_ITERATIONS:
+  - 50000
+  EEG_GENERATORS_DCGAN:
+  - MultiCenteriEEG_physiology
+  - MultiCenteriEEG_pathology
+  GPU:
+  - 2
+  N_ITERATIONS: 100000
+  PATH_REPORT: /mnt/Helium/filip/Projects/2021_PiesArt/training
+  SAVE_MODEL_ITERATION: 100
+  SAVE_REPORT_ITERATION: 100
+  SIGNAL_LENGTH: 3
+  STIM_ARTIFACT:
+  - RCS
+  WEIGHT_DETECTION: 1
+  WEIGHT_SIGNAL_RECONSTRUCTION: 100
+  WEIGHT_STFT_RECONSTRUCTION: 1
