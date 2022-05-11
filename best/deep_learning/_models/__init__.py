@@ -44,6 +44,8 @@ class SeizureDetectModel(nn.Module):
         x = F.relu(self.conv2(x))
         x = F.dropout(x, p=0.5, training=self.training)
         x = squeeze(x)
+        if bs == 1:
+            x = unsqueeze(x, 0)
         x = x.permute(2, 0, 1)
         x, (hn, cn) = self.lstm(x, (h0, c0))
         x = F.dropout(x, p=0.5, training=self.training)
