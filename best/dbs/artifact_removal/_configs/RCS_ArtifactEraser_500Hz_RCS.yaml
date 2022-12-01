@@ -9,7 +9,7 @@ TRAIN:
   BATCH_SIZE: 128
   BETA_1: 0.5
   CPU_COUNT_LOADERS: 16
-  DATASET: best.dbs.artifact_removal.dataset.StimArtifactDataset
+  DATASET: best.dbs.artifact_removal.dataset.StimArtifactDataset_RCS
   DECAY_FACTOR: 0.1
   DECAY_ITERATIONS:
   - 50000
@@ -17,7 +17,7 @@ TRAIN:
   - MultiCenteriEEG_physiology
   - MultiCenteriEEG_pathology
   GPU:
-  - 5
+  - 4
   N_ITERATIONS: 100000
   PATH_REPORT: /mnt/Helium/filip/Projects/2021_PiesArt/training
   SAVE_MODEL_ITERATION: 100

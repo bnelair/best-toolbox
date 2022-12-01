@@ -52,7 +52,7 @@ def get_fell_asleep_time(df, t_sleep_check=60, t_awake_threshold=10, awake_tag='
     return fell_asleep_time
 
 
-def get_awakening_time(df, t_awake_threshold=90, t_sleep_threshold=10, awake_tag='AWAKE', sleep_cycle_tags=['REM', 'N1', 'N2', 'N3']):
+def get_awakening_time(df, t_awake_threshold=90, t_sleep_threshold=10, awake_tag='AWAKE', sleep_cycle_tags=['REM', 'N2', 'N3']):
     df = filter_by_key(df, 'annotation', 'Arrousal')
     t_awake = datetime.timedelta(minutes=t_awake_threshold)
     t_sleep = datetime.timedelta(minutes=t_sleep_threshold)

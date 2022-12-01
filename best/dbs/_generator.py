@@ -93,3 +93,8 @@ class ArtifactGenerator:
         temp = xtemp[positions_m]
         temp = temp - temp[0]
         return temp
+
+
+
+
+

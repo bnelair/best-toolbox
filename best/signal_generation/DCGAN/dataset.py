@@ -109,6 +109,60 @@ class MergeDataset_ThreeSeconds:
                     return x, y, ystr
 
 
+class DatasetTimeDomain:
+    def __init__(self, paths=[], categories_keep=[], test_ratio=0.2):
+        import random
+        random.seed(0)
+        np.random.seed(0)
+        torch.manual_seed(0)
+
+        self.paths = paths
+        self.categories = list(categories_keep)
+        self.key_vals = {}
+        for c, k in zip(self.categories, np.arange(categories_keep.__len__(), dtype=np.int)):
+            self.key_vals[c] = k
+
+        self.state = 'train'
+        self.test_ratio = test_ratio
+
+        self.datasets = {}
+        self.idxes = {}
+        cumulative_indexes = [0]
+        for c in self.categories:
+            self.datasets[c] = MergeDataset_ThreeSeconds(self.paths, categories_keep=[c])
+            cumulative_indexes += [cumulative_indexes[-1] + self.datasets[c].__len__()]
+            self.idxes[c] = np.random.permutation(np.arange(cumulative_indexes[-2], cumulative_indexes[-1]))
+
+    def __len__(self):
+        idx = 0
+        for k, it in self.idxes.items():
+            arr = self._get_idxes(it)
+            idx += arr.__len__()
+        return idx
+
+    def train(self):
+        self.state = 'train'
+        return self
+
+    def eval(self):
+        self.state = 'eval'
+        return self
+
+    def _get_idxes(self, arr):
+        idx_ = int(round(arr.shape[0] * self.test_ratio))
+        if self.state == 'train':
+            return arr[idx_:]
+        else:
+            return arr[:idx_]
+
+    def __getitem__(self, item):
+        idx = 0
+        for k, it in self.idxes.items():
+            arr = self._get_idxes(it)
+            if item >= idx and item < idx+arr.shape[0]:
+                x = self.datasets[k][item - idx][0]#[500:1000]
+                return x, self.key_vals[k], k
+            idx += arr.shape[0]
 
 
 

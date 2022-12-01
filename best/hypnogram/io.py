@@ -82,6 +82,9 @@ _hypnogram_colors = {
     'self_report': '#000000',
     'cluster': '#000000',
 
+    'IED': '#000000',
+    'IED_best': '#000000',
+
     'left_PiesPro': '#3500d3',
     'right_PiesPro': '#2bc7c4',  # 2b7cc7
     'both_PiesPro': '#2b5dc7',
@@ -105,7 +108,6 @@ _hypnogram_colors = {
     'Sleep stage N1_best': '#2bc7c4',  # 2b7cc7
     'Sleep stage N2_best': '#2b5dc7',
     'Sleep stage N3_best': '#000000',
-
 }
 
 
@@ -142,7 +144,6 @@ def _load_CyberPSG_dataset(paths: list, tile=None, verbose=True):
         return [_load_CyberPSG(pth, tile) for pth in tqdm(paths)]
     else:
         return [_load_CyberPSG(pth, tile) for pth in paths]
-
 
 
 def save_CyberPSG(path, df):

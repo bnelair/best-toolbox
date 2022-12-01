@@ -640,7 +640,7 @@ class ScientificDataLoader(DatabaseHandler):
         if channel:
             query = f"SELECT " \
                     f"start_uutc, value  " \
-                    f"FROM {self._sql_db_name}.Automated_Events WHERE id='{str(patient_id)}' " \
+                    f"FROM {self._sql_db_name}.Spike_Rate_Events WHERE id='{str(patient_id)}' " \
                     f"and channel='{channel}' " \
                     f"and start_uutc>={start_timestamp} " \
                     f"and start_uutc<={stop_timestamp}"
@@ -650,7 +650,7 @@ class ScientificDataLoader(DatabaseHandler):
         else:
             query = f"SELECT " \
                     f"start_uutc, value, channel  " \
-                    f"FROM {self._sql_db_name}.Automated_Events WHERE id='{str(patient_id)}' " \
+                    f"FROM {self._sql_db_name}.Spike_Rate_Events WHERE id='{str(patient_id)}' " \
                     f"and start_uutc>={start_timestamp} " \
                     f"and start_uutc<={stop_timestamp}"
             self._open_sql()
@@ -737,7 +737,7 @@ class ScientificDataLoader(DatabaseHandler):
     def get_seizure_probability(self, patient_id, seizures):
         seizures_ = []
         self._open_sql()
-        for idx, szr in seizures.iterrows():
+        for idx, szr in tqdm(list(seizures.iterrows())):
             query = f"SELECT " \
                     f"* " \
                     f"FROM {self._sql_db_name}.{patient_id}_prob WHERE " \

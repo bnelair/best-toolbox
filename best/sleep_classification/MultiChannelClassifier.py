@@ -513,8 +513,6 @@ class FeatureSegment:
         return new_self
 
 
-
-
 class FeatureRecording:
     def __init__(self):
         self.segments = []
@@ -543,7 +541,6 @@ class FeatureRecording:
         for k in range(self.__len__()):
             new_self[k] = new_self[k].select_channels(channels)
         return new_self
-
 
 
 class PIBFeatureExtractor:

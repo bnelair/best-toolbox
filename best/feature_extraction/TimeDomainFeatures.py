@@ -8,6 +8,12 @@ import numpy as np
 import scipy.stats as stats
 
 def tkeo(x):
+    """
+    Teager-Kaiser Energy Operator
+
+    :param x: numpy ndarray
+    :return: numpy ndarray
+    """
     return (x[1:-1]**2) - (x[2:]*x[:-2])
 
 
