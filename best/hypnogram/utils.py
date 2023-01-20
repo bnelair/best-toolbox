@@ -125,35 +125,44 @@ def create_duration(dfHyp):
     return dfHyp
 
 
-def create_day_indexes(dfHyp, hour=12):
+def create_day_indexes(dfHyp, hour=12, tzinfo=tz.tzlocal):
     """
-    Creates a day index for each epoch within the hypnogram, given the hour.
+    Creates a day index for each epoch within the hypnogram, given the day-time hour supplied as input parameter.
+    The format of start and end has to be an integer or a float in a form representing a timestamp, or a timezone aware datetime  or Timestamp object.
+    If the start and end format do not include timezone, the local timezone will be used.
     """
     
     if not isinstance(dfHyp, pd.DataFrame):
         raise AssertionError('[INPUT ERROR]: Variable dfHyp must be of a type pandas.DataFrame.')
-
-    for row in dfHyp.iterrows():
-        if not isinstance(row[1]['start'], (Timestamp, datetime)):
-            raise AssertionError('[INPUT ERROR]: columns \'start \' & \'end\' must be timezone-aware format variables such as datetime or pandas-based Timestamp')
-
-        if not row[1]['start'].tzinfo:
-            raise AssertionError('[INPUT ERROR]: columns \'start \' & \'end\' must be timezone-aware format variables such as datetime or pandas-based Timestamp')
-
-    if not isinstance(hour, int):
-            raise AssertionError('[INPUT ERROR]: hour variable must be of an integer type!')
 
     if hour < 0 or hour > 23:
         raise ValueError(
             '[VALUE ERROR] - An input variable hour_cut indicating at which hour days are separated from each other must be on the range between 0 - 23. Pasted value: ',
             hour)
 
+    timezone_counter = 0 # timezone_counter == dfHyp.__len__() if timeaware; == 0 if not timeaware; >0 & <dfHyp.__len__() if mismatch
+    datetime_format = False
+    tzinfo = None
+    # check if the data is in
+    for ridx, row in dfHyp.iterrows():
+        if isinstance(row['start'], (Timestamp, datetime)) and isinstance(row['end'], (Timestamp, datetime)):
+            if row['start'].tzinfo and (row['start'].tzinfo == row['start'].tzinfo == row['end'].tzinfo == row['end'].tzinfo):
+                if ridx == 0:
+                    tzinfo = row['start'].tzinfo
+                    timezone_counter += 1
+                elif row['start'].tzinfo == tzinfo:
+                    timezone_counter += 1
+
+    if timezone_counter > 0 and timezone_counter != dfHyp.__len__():
+        raise ValueError('[VALUE ERROR] - Time zones in the start and end fields are inconsistent')
+
 
     dfHyp = dfHyp.sort_values('start').reset_index(drop=True)
-
     dfHyp['day'] = 0
+
     max_day = int(np.ceil((dfHyp.iloc[-1]['end'] - dfHyp.iloc[0]['start']).total_seconds() / (24*3600)))
     ref = dfHyp['start'][0].replace(hour=hour, minute=0, second=0, microsecond=0)
+
     for idx in range(max_day):
         dfHyp['day'][dfHyp['start'] >= ref] = idx + 1
         ref += timedelta(days=1)

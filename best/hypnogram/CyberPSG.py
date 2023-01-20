@@ -170,10 +170,13 @@ class CyberPSGFile:
         return annotations
 
 class CyberPSG_XML_Writter:
-    __version__ = '1.0.0'
+    __version__ = '1.0.1'
     """
     Version 1.0.0 update
     Database of UUIDs implemented
+    
+    Version 1.01 update
+    adding channel name to the export
     """
 
 
@@ -334,7 +337,7 @@ class CyberPSG_XML_Writter:
     def AnnotationIDs(self):
         return [Annotation['id'][0].param for Annotation in self.Annotations.Annotation]
 
-    def add_Annotation(self, start_datetime:datetime, end_datetime:datetime, AnnotationTypeId=0, note='', type='GlobalAnnotation'):
+    def add_Annotation(self, start_datetime:datetime, end_datetime:datetime, AnnotationTypeId=0, note='', type='GlobalAnnotation', channelName=''):
         # if AnnotationTypeId + '_aisc' in list(self.standard_UUID.keys()):
         #     AnnotationTypeId += '_aisc'
 
@@ -348,10 +351,8 @@ class CyberPSG_XML_Writter:
         Annotation.attributes[ET.QName(xsi, "type")] = type
         ID = Annotation.add_child(myXML_Id, param=str(uuid.uuid4()))
 
-        StartTimeUtc = Annotation.add_child(myXML_StartTimeUtc, param=start_s)
+        startTimeUtc = Annotation.add_child(myXML_StartTimeUtc, param=start_s)
         endTimeUtc = Annotation.add_child(myXML_endTimeUtc, param=end_s)
-
-
 
         if isinstance(AnnotationTypeId, str):
             is_AType_set = False
@@ -365,6 +366,10 @@ class CyberPSG_XML_Writter:
 
         ATypeId_s = self.AnnotationTypeIDs[AnnotationTypeId]
         AnnotationTypeId = Annotation.add_child(myXML_AnnotationTypeId, param=ATypeId_s)
+
+        if channelName:
+            chName = Annotation.add_child(myXML_ChannelName, param=channelName)
+            vertPosition = Annotation.add_child(myXML_VerticalPositionPercentage, param=0.25)
 
         if note.__len__() > 0:
             note = Annotation.add_child(myXML_Note, param=note)

@@ -12,7 +12,7 @@
 import numpy as np
 import scipy.signal as signal
 import scipy.fft as fft
-
+from tqdm import tqdm
 
 def get_datarate(x):
     """
@@ -105,7 +105,6 @@ def decimate(x, fs, fs_new, cutoff=None, datarate=False):
     #plt.axvline(125, color='green') # cutoff frequency
     #plt.show()
 
-from tqdm import tqdm
 def nandecimate(x, fs, fs_new, cutoff=None, datarate=False):
     """
     Downsample signal with anti-aliasing filter (Butterworth - 16th order).
@@ -188,8 +187,6 @@ def nandecimate(x, fs, fs_new, cutoff=None, datarate=False):
     #plt.grid(which='both', axis='both')
     #plt.axvline(125, color='green') # cutoff frequency
     #plt.show()
-
-
 
 def unify_sampling_frequency(x : list, sampling_frequency: list, fs_new=None) -> tuple:
     """
@@ -379,7 +376,6 @@ def PSD(x:np.ndarray, fs:float, nperseg=None, noverlap=0, nfft=None):
     #psdx[np.isinf(psdx)] = np.nan
     return #psdx
 
-
 class LowFrequencyFilter:
     """
         Parameters
@@ -415,8 +411,6 @@ class LowFrequencyFilter:
         self.n_decimate = n_decimate
         self.dec_cutoff = dec_cutoff
         self.filter_type = filter_type
-
-
 
         self.n_order = n_order
         self.ftype = ftype
@@ -485,7 +479,6 @@ class LowFrequencyFilter:
         if self.filter_type == 'lp': return X
         if self.filter_type == 'hp': return X_orig - X
 
-
 def resample(x, fsamp_old, fsamp_new):
     '''
     :param x: input signal
@@ -516,7 +509,6 @@ def resample(x, fsamp_old, fsamp_new):
     x = (x * var) + mu
     return x
 
-
 def detrend(y, x=None, y2=None):
     if isinstance(x, type(None)):
         x = np.linspace(0, 1, y.shape[0])
@@ -527,7 +519,6 @@ def detrend(y, x=None, y2=None):
         return y - (x*a+b)
 
     return y - (x * a + b), y2 - (x*a+b)
-
 
 def find_peaks(y):
     position = []

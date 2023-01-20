@@ -21,6 +21,7 @@ from mef_tools.io import MefReader
 from best.hypnogram.CyberPSG import CyberPSGFile, CyberPSG_XML_Writter
 from best.hypnogram.NSRR import NSRRSleepFile
 from best.hypnogram.utils import time_to_utc, create_duration, tile_annotations
+from copy import deepcopy
 
 
 
@@ -153,14 +154,31 @@ def save_CyberPSG(path, df):
     fid = CyberPSG_XML_Writter(path)
     annotation_group = 'Import_best'
     annotation_types = list(df['annotation'].unique())
+    df = deepcopy(df)
+
+    if 'channel' in df.keys():
+        df.loc[df.channel.isnull(), 'channel'] = ''
+
     df = time_to_utc(df)
 
     fid.add_AnnotationGroup(annotation_group, uuid_='00000000-0000-0000-0000-000000000001')
     for atype in annotation_types:
-        fid.add_AnnotationType(atype, groupAssociationId=annotation_group, color=_hypnogram_colors[atype])
+        if atype in _hypnogram_colors.keys():
+            fid.add_AnnotationType(atype, groupAssociationId=annotation_group, color=_hypnogram_colors[atype])
+        else:
+            fid.add_AnnotationType(atype, groupAssociationId=annotation_group)
 
     for idx, row in df.iterrows():
-        fid.add_Annotation(row['start'], row['end'], AnnotationTypeId=row['annotation'])
+        write_channel = False
+        if 'channel' in row.keys():
+            if row['channel']:
+                write_channel = True
+
+        if write_channel:
+            fid.add_Annotation(row['start'], row['end'], AnnotationTypeId=row['annotation'], channelName=row['channel'], type='ChannelAnnotation')
+        else:
+            fid.add_Annotation(row['start'], row['end'], AnnotationTypeId=row['annotation'], type='GlobalAnnotation')
+
     fid.dump()
 
 
