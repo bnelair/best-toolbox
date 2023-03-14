@@ -602,12 +602,14 @@ class PIBFeatureExtractor:
 
                     )
 
+
                 mean_band_derived_features = np.log10(mean_band_derived_features)
                 df = pd.DataFrame()
                 df['start'] = stamps
                 df['segment_duration'] = 30
                 df['datarate'] = datarate
                 df['annotation'] = annotation
+                # print(mean_band_derived_features.shape, mean_band_derived_names.__len__(), df.shape, fs, self.FeatureExtractor_MeanBand._fs, x.shape)
                 for f, fn in zip(mean_band_derived_features.T, mean_band_derived_names):
                     df[fn] = f
 
