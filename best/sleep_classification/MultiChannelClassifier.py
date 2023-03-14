@@ -26,7 +26,7 @@ from best.dbs.artifact_removal.trainer import *
 from best.signal import get_datarate, buffer
 from best.hypnogram.io import load_CyberPSG
 import pandas as pd
-from best.feature_extraction.FeatureExtractor import SleepSpectralFeatureExtractor_trial
+from best.feature_extraction.FeatureExtractor import SleepSpectralFeatureExtractor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.metrics import cohen_kappa_score, roc_curve, f1_score, accuracy_score
@@ -561,7 +561,7 @@ class PIBFeatureExtractor:
         self.segment_size = segment_size
         self.fs = fs
 
-        self.FeatureExtractor_MeanBand = SleepSpectralFeatureExtractor_trial(
+        self.FeatureExtractor_MeanBand = SleepSpectralFeatureExtractor(
             fs=self.fs,
             segm_size=self.segment_size,
             fbands=self.fbands,
