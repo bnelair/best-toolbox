@@ -2,7 +2,7 @@
 .. image:: https://github.com/mselair/best_toolbox/actions/workflows/test_publish.yml/badge.svg
     :target: https://pypi.org/project/best-toolbox/
 
-.. image:: https://readthedocs.org/projects/best_toolbox/badge/?version=latest
+.. image:: https://readthedocs.org/projects/best-toolbox/badge/?version=latest
      :target: https://best_toolbox.readthedocs.io/en/latest
      :alt: Documentation Status
 
