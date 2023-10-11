@@ -103,3 +103,17 @@ def split_files(file_paths, ratio=0.5):
     paths = list(np.array(file_paths)[mix_idxes])
     split_idx = int(np.round(ratio*paths.__len__()))
     return paths[:split_idx], paths[split_idx:]
+
+
+
+
+
+
+
+
+
+
+
+
+
+

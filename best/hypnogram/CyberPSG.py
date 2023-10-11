@@ -179,7 +179,6 @@ class CyberPSG_XML_Writter:
     adding channel name to the export
     """
 
-
     _xsi =  "http://www.w3.org/2001/XMLSchema-instance"
     _xmlns =  "http://tempuri.org/CyberPSG.xsd"
     _ns = {"xmlns:xsi": xsi}

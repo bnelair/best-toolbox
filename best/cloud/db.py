@@ -130,6 +130,8 @@ class DatabaseHandler:
         self._sql_db_name = name
         self.check_connection()
 
+
+
 class SessionFinder(DatabaseHandler):
     #TODO: Enable searching for signals between multiple session
     __version__ = '0.0.1'
@@ -137,9 +139,9 @@ class SessionFinder(DatabaseHandler):
         super().__init__(*args, **kwargs)
 
     def find_mef_session(self, patient_id, uutc_start, uutc_stop):
-        if not isinstance(uutc_start, (int, float, np.int, np.float)):
+        if not isinstance(uutc_start, (int, float, np.int64, np.float)):
             raise TypeError('uutc_start has to be of a number type - int or float. Data type ' + type(uutc_start) + ' found instead.')
-        if not isinstance(uutc_stop, (int, float, np.int, np.float)):
+        if not isinstance(uutc_stop, (int, float, np.int64, np.float)):
             raise TypeError('uutc_stop has to be of a number type - int or float. Data type ' + type(uutc_stop) + ' found instead.')
 
         uutc_start = int(round(uutc_start*1e6))
@@ -160,9 +162,9 @@ class SessionFinder(DatabaseHandler):
 
         for row in tqdm(list(df.iterrows())):
             row = row[1]
-            if not isinstance(row['start'], (int, float, np.int, np.float)):
+            if not isinstance(row['start'], (int, float, np.int64, np.float)):
                 raise TypeError('start column has to be of a number type - int or float. Data type ' + type(row['start']) + ' found instead.')
-            if not isinstance(row['end'], (int, float, np.int, np.float)):
+            if not isinstance(row['end'], (int, float, np.int64, np.float)):
                 raise TypeError('end column has to be of a number type - int or float. Data type ' + type(row['end']) + ' found instead.')
 
             uutc_start = int(round(row['start']*1e6))
@@ -707,6 +709,31 @@ class ScientificDataLoader(DatabaseHandler):
         df['start_uutc'] += 10*60
         return df
 
+    def get_seizure_detections(self, patient_id=None, start_timestamp=None, stop_timestamp=None):
+        if isinstance(start_timestamp, type(None)):
+            start_timestamp = 0
+        if isinstance(stop_timestamp, type(None)):
+            stop_timestamp = datetime.now().timestamp()
+
+        start_timestamp *= 1e6
+        stop_timestamp *= 1e6
+
+        query = f"SELECT " \
+                f"start_uutc, stop_uutc " \
+                f"FROM {self._sql_db_name}.Automated_Events WHERE id='{str(patient_id)}' " \
+                f"and start_uutc>={start_timestamp} " \
+                f"and start_uutc<={stop_timestamp} " \
+                f"and ev_type='seizure'  and source='DaemonSeizureDet'"\
+                #f"and source='eeg_review'"
+        self._open_sql()
+        df = pd.read_sql(query, self._sql_connection)
+        self._close_sql()
+        df['start_uutc'] /= 1e6
+        # df['start_uutc'] += 10*60
+        df['stop_uutc'] /= 1e6
+        # df['stop_uutc'] += 10*60
+        return df
+
 
     def get_seizures(self, patient_id=None, start_timestamp=None, stop_timestamp=None):
         if isinstance(start_timestamp, type(None)):
@@ -718,11 +745,11 @@ class ScientificDataLoader(DatabaseHandler):
         stop_timestamp *= 1e6
 
         query = f"SELECT " \
-                f"start_uutc, stop_uutc " \
+                f"start_uutc, stop_uutc, channel " \
                 f"FROM {self._sql_db_name}.Manual_Events WHERE id='{str(patient_id)}' " \
                 f"and start_uutc>={start_timestamp} " \
                 f"and start_uutc<={stop_timestamp} " \
-                f"and ev_type='seizure'  and source='eeg_review'"\
+                f"and ev_type='seizure' and (source='eeg_review' OR source='review_cyberpsg')"\
                 #f"and source='eeg_review'"
         self._open_sql()
         df = pd.read_sql(query, self._sql_connection)

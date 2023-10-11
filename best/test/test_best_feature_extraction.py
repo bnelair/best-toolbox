@@ -14,11 +14,16 @@ from shutil import rmtree
 import unittest
 from unittest import TestCase
 
-from best.feature_extraction import *
+from best.feature_extraction.SpectralFeatures import *
+from best.feature_extraction.FeatureExtractor import *
 
 class Test_feature_extration(TestCase):
+    def
+
     def test_import(self):
         print("Testing import 'from best.feature_extraction'")
+
+
 
 
 if __name__ == '__main__':

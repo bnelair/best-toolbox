@@ -33,7 +33,7 @@ from sklearn.metrics import cohen_kappa_score, roc_curve, f1_score, accuracy_sco
 from best.modules import ZScoreModule, PCAModule
 from best.hypnogram.utils import merge_annotations
 
-
+from best.feature_extraction.WaveDetector import WaveDetector
 
 class ReturnArrayObject:
     def __init__(self, parent, key):
@@ -308,14 +308,6 @@ class EEGDataLoader:
         hyp = pd.DataFrame(hyp_)
         return hyp
 
-
-
-
-
-
-
-
-
 def compare_channels(x, channels):
     return sum([ch in channels for ch in x['channels']]) == channels.__len__()
 
@@ -584,6 +576,7 @@ class PIBFeatureExtractor:
             if x.shape[0] / fs >= 30:
                 x = buffer(x, fs=fs, segm_size=30, drop=True)
                 datarate = get_datarate(x)
+                x[np.isnan(x)] = 0
                 stamps = np.arange(s, s + x.shape[0] * 30, 30)
 
                 mean_bands, feature_names = self.FeatureExtractor_MeanBand(x)
@@ -621,6 +614,122 @@ class PIBFeatureExtractor:
         return FtrSgm
 
 
+class AllFeatureExtractor:
+    def __init__(self,
+                 fbands=[
+                     [0.5, 5],  # delta
+                     [4, 9],  # theta
+                     [8, 14],  # alpha
+                     [11, 16],  # spindle
+                     [14, 20],
+                     [20, 30]
+                 ],
+                 segment_size=30,
+                 fs=250
+                 ):
+
+        self.fbands = fbands
+        self.segment_size = segment_size
+        self.fs = fs
+
+        self.FeatureExtractor_MeanBand = SleepSpectralFeatureExtractor(
+            fs=self.fs,
+            segm_size=self.segment_size,
+            fbands=self.fbands,
+            datarate=False
+        )
+
+        self.FeatureExtractor_MeanBand._extraction_functions = \
+            [
+                mean_bands,
+            ]
+
+    def extract_segment(self, signal_segment):
+        FtrSgm = FeatureSegment()
+        for ch in signal_segment.channels:
+            x = signal_segment.signal[ch]
+            fs = signal_segment.fs[ch]
+            s = signal_segment.start[ch]
+            annotation = signal_segment.annotation[ch]
+
+            if x.shape[0] / fs >= 30:
+                x = buffer(x, fs=fs, segm_size=30, drop=True)
+                datarate = get_datarate(x)
+                stamps = np.arange(s, s + x.shape[0] * 30, 30)
+
+                print('extracting features')
+                mean_bands, feature_names = self.FeatureExtractor_MeanBand(x)
+                mean_bands = np.stack(mean_bands).T
+
+                functions = [np.divide]
+                symbols = ['/']
+                mean_band_derived_features, mean_band_derived_names = mean_bands, feature_names
+                for idx in range(functions.__len__()):
+                    mean_band_derived_features, mean_band_derived_names = augment_features(
+                        mean_band_derived_features,
+                        feature_indexes=np.arange(mean_band_derived_features.shape[1]),
+                        operation=functions[idx],
+                        mutual=True, operation_str=symbols[idx],
+                        feature_names=mean_band_derived_names
+
+                    )
+                mean_band_derived_features = np.log10(mean_band_derived_features)
+
+                df = pd.DataFrame()
+                df['start'] = stamps
+                df['segment_duration'] = 30
+                df['datarate'] = datarate
+                df['annotation'] = annotation
+                # print(mean_band_derived_features.shape, mean_band_derived_names.__len__(), df.shape, fs, self.FeatureExtractor_MeanBand._fs, x.shape)
+                for f, fn in zip(mean_band_derived_features.T, mean_band_derived_names):
+                    df[fn] = f
+
+                for band in [self.fbands[0]]:
+                    print('extracting waves band ', band)
+                    WaveDet = WaveDetector(fs=fs, cutoff_low=band[0], cutoff_high=band[1])
+                    delta_t_mean = []
+                    delta_t_std = []
+                    delta_slope_mean = []
+                    delta_slope_std = []
+                    delta_pk2pk_mean = []
+                    delta_pk2pk_std = []
+                    for (x_, dr) in tqdm(list(zip(x, datarate))):
+                        if dr > 0.3:
+                            x__ = x_.copy()
+                            x__[np.isnan(x__)] = np.random.randn(np.isnan(x__).sum()) * 0.001 / np.nanstd(x)
+                            stats, det = WaveDet(x__)
+                            delta_t_mean += [stats['delta_t_stats']['mean']]
+                            delta_t_std += [stats['delta_t_stats']['std']]
+                            delta_slope_mean += [stats['slope_stats']['mean']]
+                            delta_slope_std += [stats['slope_stats']['std']]
+                            delta_pk2pk_mean += [stats['pk2pk_stats']['mean']]
+                            delta_pk2pk_std += [stats['pk2pk_stats']['std']]
+                        else:
+                            delta_t_mean += [np.nan]
+                            delta_t_std += [np.nan]
+                            delta_slope_mean += [np.nan]
+                            delta_slope_std += [np.nan]
+                            delta_pk2pk_mean += [np.nan]
+                            delta_pk2pk_std += [np.nan]
+
+
+                    df[f'delta_t_mean_{band[0]}-{band[1]}'] = delta_t_mean
+                    df[f'delta_t_std_{band[0]}-{band[1]}'] = delta_t_std
+                    df[f'delta_slope_mean_{band[0]}-{band[1]}'] = delta_slope_mean
+                    df[f'delta_slope_std_{band[0]}-{band[1]}'] = delta_slope_std
+                    df[f'delta_pk2pk_mean_{band[0]}-{band[1]}'] = delta_pk2pk_mean
+                    df[f'delta_pk2pk_std_{band[0]}-{band[1]}'] = delta_pk2pk_std
+
+
+
+                FtrSgm.add_channel(
+                    df_features=df,
+                    channel_name=ch,
+                    feature_names=mean_band_derived_names,
+                )
+        return FtrSgm
+
+
 class MultiChannelSleepClassifier:
     __name__ = 'MultiChannelSleepClassifier'
     __version__ = '0.0.1'
@@ -644,7 +753,7 @@ class MultiChannelSleepClassifier:
         self.fs = fs
         self.dr_threshold = dr_threshold
 
-        self.FtrExtractor = PIBFeatureExtractor(
+        self.FtrExtractor = PIBFexfatureExtractor(
             fbands=fbands,
             segment_size=segment_size,
             fs=fs
