@@ -278,7 +278,7 @@ def remove_samples(x, y=None, to_del=None):
 
     """
     to_del = np.array(to_del)
-    if to_del.dtype == np.bool: # if to_del is array of bools
+    if to_del.dtype == np.bool_: # if to_del is array of bools
         if x.__len__() != to_del.__len__():
             raise AssertionError('If to_del is a bool array, must be the same length as x')
         to_del = np.where(to_del)[0]

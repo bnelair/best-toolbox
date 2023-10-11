@@ -18,7 +18,7 @@ from best.feature_extraction.SpectralFeatures import *
 from best.feature_extraction.FeatureExtractor import *
 
 class Test_feature_extration(TestCase):
-    def
+
 
     def test_import(self):
         print("Testing import 'from best.feature_extraction'")
