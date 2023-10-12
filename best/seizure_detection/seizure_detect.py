@@ -72,7 +72,6 @@ def preprocess_input(x, fs):
     else:
         raise ValueError("too many NaN values in input")
 
-
 def infer_seizure_probability(x, model, use_cuda=False, cuda_number=0):
     """
     infers seizure probability for a given input x; recommended signal len is 300 seconds.

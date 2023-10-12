@@ -31,6 +31,9 @@ Cite
 """""""""""""""""""""""""""
 When use whole, parts, or are inspired by, we appreciate you acknowledge and refer these journal papers:
 
+
+
+
 | Mivalt F, Kremen V, Sladky V, Balzekas I, Nejedly P, Gregg N, Lundstrom BN, Lepkova K, Pridalova T, Brinkmann BH, et al. Electrical brain stimulation and continuous behavioral state tracking in ambulatory humans. J Neural Eng (2022) Available at: http://iopscience.iop.org/article/10.1088/1741-2552/ac4bfd
 
 
