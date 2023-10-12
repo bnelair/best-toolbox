@@ -9,7 +9,7 @@ from scipy.signal import spectrogram
 from scipy.stats import zscore
 from torch import from_numpy
 
-from best.deep_learning._models import load_trained_model
+from best.seizure_detection._models import load_trained_model
 
 """
     Seizure detection module 
@@ -22,8 +22,9 @@ Example
 ^^^^^^^^^
 
 .. code-block:: python
+from best.seizure_detection import seizure_detect import load_trained_model
     # load model
-    modelA =  best.deep_learning.seizure_detect.load_trained_model('modelA')
+    modelA =  load_trained_model('modelA')
     # load data
     fs = 500
     x_len = 300

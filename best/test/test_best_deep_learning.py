@@ -5,18 +5,12 @@
 # LICENSE file in the root directory of this source tree.
 
 
-import os
-import numpy as np
-
-from copy import deepcopy
-from shutil import rmtree
-
 import unittest
 from unittest import TestCase
 
 import torch.cuda
 
-from best.deep_learning.seizure_detect import load_trained_model, preprocess_input, infer_seizure_probability
+from best.seizure_detection.seizure_detect import load_trained_model, preprocess_input, infer_seizure_probability
 from numpy.random import rand
 from best.deep_learning.models_generic import *
 
