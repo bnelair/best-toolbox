@@ -14,8 +14,8 @@ from dateutil import tz
 from copy import deepcopy
 from tqdm import tqdm
 
-from best.hypnogram.visualisation import plot_hypnogram
-from best.hypnogram.utils import merge_annotations, filter_by_key
+from best.annotations.visualisation import plot_hypnogram
+from best.annotations.utils import merge_annotations, filter_by_key
 
 
 """

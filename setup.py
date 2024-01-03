@@ -84,7 +84,8 @@ setuptools.setup(
         'sshtunnel',
         'torch',
         'pyyaml',
-        'mne'
+        'mne',
+        'epycom'
     ]
 )
 

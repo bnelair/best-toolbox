@@ -64,7 +64,7 @@ def _convert_to_timezone(x, tzinfo):
 
 def time_to_local(dfHyp):
     """
-    Converts the time into the local timezone. Default by python and PC. Does not enter the timezone explicitely. Cannot be used for creating a hypnogram figure.
+    Converts the time into the local timezone. Default by python and PC. Does not enter the timezone explicitely. Cannot be used for creating a annotations figure.
     """
     def convert(x, col_key):
         return _convert_to_local(x[col_key])
@@ -90,7 +90,7 @@ def time_to_utc(dfHyp):
 
 def time_to_timezone(dfHyp, tzinfo):
     """
-    Converts the hypnogram into a timezone. The timezone has to be from a python library dateutil
+    Converts the annotations into a timezone. The timezone has to be from a python library dateutil
     """
     def convert(x, col_key):
         return _convert_to_timezone(x[col_key], tzinfo)
@@ -102,7 +102,7 @@ def time_to_timezone(dfHyp, tzinfo):
 
 def time_to_timestamp(dfHyp):
     """
-    Converts the hypnogram time to timestamp.
+    Converts the annotations time to timestamp.
     """
     def convert(x, col_key):
         return _convert_to_timestamp(x[col_key])
@@ -114,7 +114,7 @@ def time_to_timestamp(dfHyp):
 
 def create_duration(dfHyp):
     """
-    Creates duration for each epoch within the hypnogram. (Faster on timestamp)
+    Creates duration for each epoch within the annotations. (Faster on timestamp)
     """
     def duration(x):
         if type(x['start']) in (datetime, Timestamp):
@@ -127,7 +127,7 @@ def create_duration(dfHyp):
 
 def create_day_indexes(dfHyp, hour=12, tzinfo=tz.tzlocal):
     """
-    Creates a day index for each epoch within the hypnogram, given the day-time hour supplied as input parameter.
+    Creates a day index for each epoch within the annotations, given the day-time hour supplied as input parameter.
     The format of start and end has to be an integer or a float in a form representing a timestamp, or a timezone aware datetime  or Timestamp object.
     If the start and end format do not include timezone, the local timezone will be used.
     """

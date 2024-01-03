@@ -18,7 +18,7 @@ from datetime import datetime
 from sqlalchemy.pool import NullPool
 from sshtunnel import SSHTunnelForwarder
 
-from best.hypnogram.utils import create_day_indexes, time_to_timezone, time_to_timestamp, tile_annotations, create_duration
+from best.annotations.utils import create_day_indexes, time_to_timezone, time_to_timestamp, tile_annotations, create_duration
 from best.cloud._db_connection_variables import *
 
 import pandas as pd
@@ -451,8 +451,7 @@ class SystemStateLoader(DatabaseHandler):
         freqs = []
         ampls = []
         pws = []
-        for row in df_data.iterrows():
-            row = row[1]
+        for _, row in df_data.iterrows():
             ampl = [row['curr_Prog'+str(k)+'AmpInMilliamps'] for k in range(4) if not isinstance(row['curr_Prog'+str(k)+'AmpInMilliamps'], type(None))]
 
             freq = row['curr_rate_in_hz']
@@ -472,9 +471,9 @@ class SystemStateLoader(DatabaseHandler):
         if ampls.__len__() == 0: ampls = None
         if pws.__len__() == 0: pws = None
         stim_info = {
-            'freq': np.max(freqs),
-            'ampl': np.max(ampls),
-            'pulsewidth': np.max(pws)
+            'freq': np.nanmax(freqs),
+            'ampl': np.nanmax(ampls),
+            'pulsewidth': np.nanmax(pws)
         }
         return stim_info
 

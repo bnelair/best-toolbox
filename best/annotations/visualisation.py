@@ -18,11 +18,11 @@ from datetime import timedelta, datetime
 
 def plot_hypnogram(orig_df, hypnogram_values=None, hypnogram_colors=None, fontsize=12, fig=None, night_start=22):
     """
-    Creates a Matplotlib figure of spectrogram from the hypnogram. Time must be in a time-zone aware format.
+    Creates a Matplotlib figure of spectrogram from the annotations. Time must be in a time-zone aware format.
 
     Parameters
     ----------
-    orig_df : hypnogram
+    orig_df : annotations
     hypnogram_values : dict
         dict of a y-axis values for each sleep state
     hypnogram_colors : dict

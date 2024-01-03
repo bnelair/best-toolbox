@@ -18,15 +18,15 @@ from tqdm import tqdm
 
 from mef_tools.io import MefReader
 
-from best.hypnogram.CyberPSG import CyberPSGFile, CyberPSG_XML_Writter
-from best.hypnogram.NSRR import NSRRSleepFile
-from best.hypnogram.utils import time_to_utc, create_duration, tile_annotations
+from best.annotations.CyberPSG import CyberPSGFile, CyberPSG_XML_Writter
+from best.annotations.NSRR import NSRRSleepFile
+from best.annotations.utils import time_to_utc, create_duration, tile_annotations
 from copy import deepcopy
 
 
 
 """
-Tools for loading and saving of hypnogram files.
+Tools for loading and saving of annotations files.
 """
 
 _hypnogram_colors = {
@@ -141,7 +141,7 @@ def _load_CyberPSG(path, tile=None):
 
 def _load_CyberPSG_dataset(paths: list, tile=None, verbose=True):
     if verbose:
-        print('Loading hypnogram Dataset')
+        print('Loading annotations Dataset')
         return [_load_CyberPSG(pth, tile) for pth in tqdm(paths)]
     else:
         return [_load_CyberPSG(pth, tile) for pth in paths]

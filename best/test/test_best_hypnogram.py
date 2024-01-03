@@ -14,17 +14,17 @@ from shutil import rmtree
 import unittest
 from unittest import TestCase
 
-from best.hypnogram.analysis import *
-from best.hypnogram.visualisation import *
-from best.hypnogram.utils import *
-from best.hypnogram.io import *
-from best.hypnogram.correct import *
-from best.hypnogram.CyberPSG import *
-from best.hypnogram.NSRR import *
+from best.annotations.analysis import *
+from best.annotations.visualisation import *
+from best.annotations.utils import *
+from best.annotations.io import *
+from best.annotations.correct import *
+from best.annotations.CyberPSG import *
+from best.annotations.NSRR import *
 
 class TestHypnogram(TestCase):
     def test_import(self):
-        print("Testing import 'from best.hypnogram'" )
+        print("Testing import 'from best.annotations'" )
 
 
 

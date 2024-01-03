@@ -9,7 +9,6 @@ import numpy as np
 from shutil import rmtree
 from time import sleep
 
-
 def create_folder(PATH_TO_CREATE):
     """
     Creates a folder on PATH_TO_CREATE position.

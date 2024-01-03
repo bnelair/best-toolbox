@@ -8,7 +8,7 @@
 
 
 """
-A package for a standardized manipulation with hypnogram annotations, saving, loading across different file formats (CyberP{SG, NSRR, ...) but also
+A package for a standardized manipulation with annotations annotations, saving, loading across different file formats (CyberP{SG, NSRR, ...) but also
 basic analysis of hypnograms. The package is based on pandas.DataFrame.
 """
 

@@ -25,7 +25,7 @@ from scipy.optimize import differential_evolution
 from scipy.linalg import norm
 
 
-from best.hypnogram.utils import time_to_timestamp, time_to_utc, merge_annotations
+from best.annotations.utils import time_to_timestamp, time_to_utc, merge_annotations
 from best.feature import augment_features, balance_classes
 from best.signal import unify_sampling_frequency, get_datarate, buffer
 from best.stats import kl_divergence_nonparametric

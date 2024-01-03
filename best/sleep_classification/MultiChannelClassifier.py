@@ -9,7 +9,7 @@ import numpy as np
 from tqdm import tqdm
 
 from best.files import create_folder, get_files, get_folders
-from best.hypnogram.utils import time_to_timestamp
+from best.annotations.utils import time_to_timestamp
 from best.cloud.mef import MefClient
 from best import DELIMITER
 
@@ -24,14 +24,14 @@ from best.dbs.artifact_removal import configs_ArtifactEraser, models_ArtifactEra
 from best.cloud.db import SessionFinder
 from best.dbs.artifact_removal.trainer import *
 from best.signal import get_datarate, buffer
-from best.hypnogram.io import load_CyberPSG
+from best.annotations.io import load_CyberPSG
 import pandas as pd
 from best.feature_extraction.FeatureExtractor import SleepSpectralFeatureExtractor
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.metrics import cohen_kappa_score, roc_curve, f1_score, accuracy_score
 from best.modules import ZScoreModule, PCAModule
-from best.hypnogram.utils import merge_annotations
+from best.annotations.utils import merge_annotations
 
 from best.feature_extraction.WaveDetector import WaveDetector
 
@@ -1034,7 +1034,7 @@ class CloudEEGDataLoader:
             hyp['ampl'] = 0
             return hyp
 
-        # prepare for tiling the hypnogram based on stim
+        # prepare for tiling the annotations based on stim
         t = np.arange(stim_info.start.min(), stim_info.end.max(), 1)
         stim_ref = np.zeros_like(t) - 1
         ampl_ref = np.zeros_like(t) - 1
@@ -1042,7 +1042,7 @@ class CloudEEGDataLoader:
             stim_ref[(t >= row_['start']) & (t <= row_['end'])] = row_['frequency']
             ampl_ref[(t >= row_['start']) & (t <= row_['end'])] = row_['amplitude']
 
-        # tile hypnogram with stim annots
+        # tile annotations with stim annots
         for k, row_hyp in tqdm(list(hyp.iterrows())):
             t_ = t[(t >= row_hyp['start']) & (t <= row_hyp['end'])]
 
@@ -1098,7 +1098,7 @@ class CloudEEGDataLoader:
         SFndr = SessionFinder(self.db_id)
         hyp = []
         for f in files_hyp:
-            # Load hypnogram
+            # Load annotations
             hyp_ = load_CyberPSG(f)
             hyp_ = time_to_timestamp(hyp_)
             if round_timestamps:
