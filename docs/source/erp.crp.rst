@@ -1,4 +1,4 @@
-Evoked Response Potential (ERP) Analysis
+Canonical Response Parameterization (CRP)
 ==========================================
 
 .. automodule:: best.erp.crp

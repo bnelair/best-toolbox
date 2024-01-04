@@ -18,7 +18,7 @@
    dbs
    deep_learning
    feature_extraction
-   hypnogram
+   annotation
    modules
    signal_generation
    sleep_classification
