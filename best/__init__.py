@@ -5,7 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 import os
 
-__version__ = '0.1.0a'
+__version__ = '0.1.1'
 
 
 
