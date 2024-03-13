@@ -33,22 +33,22 @@ This toolbox was developed during multiple projects we appreciate you acknowledg
 The toolbox as a whole was developed during the following projects:
 
 | F. Mivalt et V. Kremen et al., “Electrical brain stimulation and continuous behavioral state tracking in ambulatory humans,” J. Neural Eng., vol. 19, no. 1, p. 016019, Feb. 2022, doi: 10.1088/1741-2552/ac4bfd.
-
+|
 | V. Sladky et al., “Distributed brain co-processor for tracking spikes, seizures and behaviour during electrical brain stimulation,” Brain Commun., vol. 4, no. 3, May 2022, doi: 10.1093/braincomms/fcac115.
-
-For different modules, please see below.
+|
+For individual modules, please see below.
 
 Sleep classification and feature extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | F. Mivalt et V. Kremen et al., “Electrical brain stimulation and continuous behavioral state tracking in ambulatory humans,” J. Neural Eng., vol. 19, no. 1, p. 016019, Feb. 2022, doi: 10.1088/1741-2552/ac4bfd.
-
+|
 | F. Mivalt et V. Sladky et al., “Automated sleep classification with chronic neural implants in freely behaving canines,” J. Neural Eng., vol. 20, no. 4, p. 046025, Aug. 2023, doi: 10.1088/1741-2552/aced21.
-
+|
 | Gerla, V., Kremen, V., Macas, M., Dudysova, D., Mladek, A., Sos, P., & Lhotska, L. (2019). Iterative expert-in-the-loop classification of sleep PSG recordings using a hierarchical clustering. Journal of Neuroscience Methods, 317(February), 61?70. https://doi.org/10.1016/j.jneumeth.2019.01.013
-
+|
 | Kremen, V., Brinkmann, B. H., Van Gompel, J. J., Stead, S. (Matt) M., St Louis, E. K., & Worrell, G. A. (2018). Automated Unsupervised Behavioral State Classification using Intracranial Electrophysiology. Journal of Neural Engineering. https://doi.org/10.1088/1741-2552/aae5ab
-
+|
 | Kremen, V., Duque, J. J., Brinkmann, B. H., Berry, B. M., Kucewicz, M. T., Khadjevand, F., G.A. Worrell, G. A. (2017). Behavioral state classification in epileptic brain using intracranial electrophysiology. Journal of Neural Engineering, 14(2), 026001. https://doi.org/10.1088/1741-2552/aa5688
 
 
@@ -71,7 +71,8 @@ Evoked Response Potential Analysis
 Acknowledgement
 """""""""""""""""""
 
-BEST was developed under projects supported by NIH Brain Initiative UH2&3 NS095495 Neurophysiologically-Based Brain State Tracking & Modulation in Focal Epilepsy, DARPA HR0011-20-2-0028 Manipulating and Optimizing Brain Rhythms for Enhancement of Sleep (Morpheus).
+BEST was developed under projects supported by NIH Brain Initiative UH2&3 NS095495 Neurophysiologically-Based Brain State Tracking & Modulation in Focal Epilepsy, NIH U01-NS128612 An Ecosystem of Techmology and Protocols for Adaptive Neuromodulation Research in Humans, DARPA HR0011-20-2-0028 Manipulating and Optimizing Brain Rhythms for Enhancement of Sleep (Morpheus).
+
 Filip Mivalt was also partially supported by the grant FEKT-K-22-7649 realized within the project Quality Internal Grants of the Brno University of Technology (KInG BUT), Reg. No. CZ.02.2.69/0.0/0.0/19_073/0016948, which is financed from the OP RDE.
 
 

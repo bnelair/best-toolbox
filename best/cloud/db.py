@@ -25,7 +25,6 @@ import pandas as pd
 from datetime import datetime
 
 
-
 class DatabaseHandler:
     __version__ = '0.0.1'
     def __init__(self, sql_db_name, sql_host=None, sql_user=None, sql_pwd=None, sql_port=None, ssh_host=None, ssh_user=None, ssh_pwd=None, ssh_port=None):
@@ -131,7 +130,6 @@ class DatabaseHandler:
         self.check_connection()
 
 
-
 class SessionFinder(DatabaseHandler):
     #TODO: Enable searching for signals between multiple session
     __version__ = '0.0.1'
@@ -139,9 +137,9 @@ class SessionFinder(DatabaseHandler):
         super().__init__(*args, **kwargs)
 
     def find_mef_session(self, patient_id, uutc_start, uutc_stop):
-        if not isinstance(uutc_start, (int, float, np.int64, np.float)):
+        if not isinstance(uutc_start, (int, float, np.int64, np.float32, np.float16, np.float64)):
             raise TypeError('uutc_start has to be of a number type - int or float. Data type ' + type(uutc_start) + ' found instead.')
-        if not isinstance(uutc_stop, (int, float, np.int64, np.float)):
+        if not isinstance(uutc_stop, (int, float, np.int64, np.float32, np.float16, np.float64)):
             raise TypeError('uutc_stop has to be of a number type - int or float. Data type ' + type(uutc_stop) + ' found instead.')
 
         uutc_start = int(round(uutc_start*1e6))
@@ -162,9 +160,9 @@ class SessionFinder(DatabaseHandler):
 
         for row in tqdm(list(df.iterrows())):
             row = row[1]
-            if not isinstance(row['start'], (int, float, np.int64, np.float)):
+            if not isinstance(row['start'], (int, float, np.int64, np.float32, np.float16, np.float64)):
                 raise TypeError('start column has to be of a number type - int or float. Data type ' + type(row['start']) + ' found instead.')
-            if not isinstance(row['end'], (int, float, np.int64, np.float)):
+            if not isinstance(row['end'], (int, float, np.int64, np.float32, np.float16, np.float64)):
                 raise TypeError('end column has to be of a number type - int or float. Data type ' + type(row['end']) + ' found instead.')
 
             uutc_start = int(round(row['start']*1e6))
@@ -192,7 +190,6 @@ class SessionFinder(DatabaseHandler):
         unique_ids = pd.read_sql(query, self._sql_connection)
         self._close_sql()
         return unique_ids.values[0]
-
 
 
 class SleepClassificationModelDBHandler(DatabaseHandler):
@@ -683,7 +680,6 @@ class ScientificDataLoader(DatabaseHandler):
         df = pd.read_sql(query, self._sql_connection)
         self._close_sql()
         return df['COUNT(start_uutc)'][0]
-
 
     def get_spike_detections(self,  patient_id=None, channel=None, start_timestamp=None, stop_timestamp=None):
         if isinstance(start_timestamp, type(None)):
