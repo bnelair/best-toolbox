@@ -31,7 +31,7 @@ setuptools.setup(
     name="best_toolbox",
     version=verstr,
     license='',
-    url="https://github.com/mselair/best_toolbox",
+    url="https://github.com/bnelair/best-toolbox",
 
     author="Filip Mivalt",
     author_email="mivalt.filip@mayo.edu",

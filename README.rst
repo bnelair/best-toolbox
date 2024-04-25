@@ -79,7 +79,7 @@ Filip Mivalt was also partially supported by the grant FEKT-K-22-7649 realized w
 License
 """"""""""""""""""
 
-This software is licensed under GNU license. For details see the `LICENSE <https://github.com/mselair/best_toolbox/blob/master/LICENSE>`_ file in the root directory of this project.
+This software is licensed under GNU license. For details see the `LICENSE <https://github.com/bnelair/best-toolbox/blob/master/LICENSE>`_ file in the root directory of this project.
 
 
 Documentation
