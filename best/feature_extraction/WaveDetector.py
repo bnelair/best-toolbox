@@ -425,23 +425,44 @@ def slow_wave_detect(data, fs, max_distance, min_distance, amplitude_threshold, 
         The code is based on the following publication and extends and improves the features and methods of original
     wave detections from the paper:
 
-    - Riedner, B. a., Vyazovskiy, V. V., Huber, R., Massimini, M., Esser, S., Murphy, M., & Tononi, G. (2007).
-    Sleep homeostasis and cortical synchronization: III. A high-density EEG study of sleep slow waves in humans. Sleep, 30(12), 1643–1657.
+    - Riedner, B. a., Vyazovskiy, V. V., Huber, R., Massimini, M., Esser, S., Murphy, M., & Tononi, G. (2007). Sleep homeostasis and cortical synchronization: III. A high-density EEG study of sleep slow waves in humans. Sleep, 30(12), 1643–1657.
 
-    Parameters:
-    data (array-like): Input EEG data.
-    fs (float): Sampling frequency of the data.
-    max_distance (float): Maximum distance between zero crossings for a valid slow wave.
-    min_distance (float): Minimum distance between zero crossings for a valid slow wave.
-    amplitude_threshold (float): Minimum amplitude for a valid slow wave.
-    pdf_path (str): Path to save the plot as a PDF.
-    sleep_state (str): Current sleep state.
-    epoch_number (int): Current epoch number.
-    slow_waves_to_remove (list, optional): List of slow waves to remove.
-    time_threshold (float, optional): Time threshold for removing slow waves.
-    verbose (bool, optional): If True, plot the results. Default is True.
 
-    Returns:
+    fs: float
+        Sampling frequency
+    cutoff_low: float
+        The lowest frequency of the wave detects
+    cutoff_high : float
+        The highest frequency of the wave detects
+
+
+    Parameters
+    -------------
+    data: array
+        Input EEG data.
+    fs: float
+        Sampling frequency of the data.
+    max_distance: float
+        Maximum distance between zero crossings for a valid slow wave.
+    min_distance: float
+        Minimum distance between zero crossings for a valid slow wave.
+    amplitude_threshold: float
+        Minimum amplitude for a valid slow wave.
+    pdf_path: str
+        Path to save the plot as a PDF.
+    sleep_state: str
+        Current sleep state.
+    epoch_number: int
+        Current epoch number.
+    slow_waves_to_remove: list
+        Optional list of slow waves to remove.
+    time_threshold: float
+        Optional time threshold for removing slow waves.
+    verbose: bool
+        Optional - If True, plot the results. Default is True.
+
+    Returns
+    -------
     tuple: Tuple containing the detected slow waves, their amplitudes and slopes, the mean and standard deviation of the amplitudes and slopes, and the number of detected waves.
     """
     # Filter the signal by 50 msec moving average filter
