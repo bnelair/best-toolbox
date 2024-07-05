@@ -1,9 +1,10 @@
+
 import os
+
 import pandas as pd
 
 from tqdm import tqdm
 from mef_tools.io import MefReader
-
 from best.files import get_files
 
 def list_mefd_files(path_bidsdata):

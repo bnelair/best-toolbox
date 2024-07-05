@@ -43,7 +43,16 @@ def mean_frequency(args):
 
     f = np.reshape(f, (1, -1))
     pwr = np.sum(P, axis=1)
-    mnfreq = np.dot(P, f.T).squeeze() / pwr
+    # Ensure pwr does not contain zeros to avoid division by zero
+    pwr[pwr == 0] = np.nan  # Replace zeros with NaNs to handle them later
+
+    # Suppress warnings temporarily and handle invalid values
+    with np.errstate(invalid='ignore', divide='ignore'):
+        mnfreq = np.dot(P, f.T).squeeze() / pwr
+
+    # Handle invalid values (e.g., NaNs or infinities) in the result
+    mnfreq = np.nan_to_num(mnfreq, nan=0.0, posinf=0.0, neginf=0.0)
+
     return [mnfreq], ['MEAN_DOMINANT_FREQUENCY']
 
 
@@ -159,12 +168,15 @@ def relative_bands(args):
     fullpsdx = np.nansum(Pxx[:, (freq >= bands.min()) & (freq <= bands.max())], axis=1)
     for band in bands:
         subpsdx = Pxx[:, (freq >= band[0]) & (freq <= band[1])]
-        outp_params.append(
-            np.nansum(subpsdx, axis=1) / fullpsdx
-        )
+        # Suppress warnings temporarily and handle invalid values
+        with np.errstate(invalid='ignore', divide='ignore'):
+            ratio = np.nansum(subpsdx, axis=1) / fullpsdx
+
+        # Handle invalid values (e.g., NaNs or infinities) in the ratio
+        ratio = np.nan_to_num(ratio, nan=0.0, posinf=0.0, neginf=0.0)
+        outp_params.append(ratio)
         outp_msg.append('REL_PSD_' + str(band[0]) + '-' + str(band[1]) + 'Hz')
     return outp_params, outp_msg
-
 
 def normalized_entropy(args):
     """
