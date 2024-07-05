@@ -32,11 +32,11 @@ Version 1.0 (2024-06-01) by V. Kremen (Kremen.Vaclav@mayo.edu)
 
 Examples
 """"""""""""""""""
-.. image:: ../../_images/1_det.png
-   :width: 300
+.. image:: ../../_images/slow_waves_example.png
+   :width: 600
 
-.. image:: ../../_images/slope_vaclav.pdf
-   :width: 300
+.. image:: ../../_images/slope_vaclav.png
+   :width: 600
 
 
 
