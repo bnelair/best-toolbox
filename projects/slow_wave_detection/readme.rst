@@ -32,12 +32,16 @@ Version 1.0 (2024-06-01) by V. Kremen (Kremen.Vaclav@mayo.edu)
 
 Examples
 """"""""""""""""""
+Example of individual slow wave detections.
+
+
 .. image:: ../../_images/slow_waves_example.png
    :width: 600
 
+Extracted features for the whole night.
+
 .. image:: ../../_images/slope_vaclav.png
    :width: 600
-
 
 
 Code
