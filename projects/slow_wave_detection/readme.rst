@@ -7,9 +7,9 @@ Here we conveniently provide a standalone fully functional code example for anal
 This enables trialing this code without installing the whole Best Toolbox library.
 The codes were also embedded in the BEST Toolbox so they can be freely available upon installing the whole `BEST Toolbox <https://github.com/bnelair/best-toolbox>`_ library.
 
-The documentation to the toolbox is available at
+The documentation to the toolbox is available at `BEST Toolbox docs <https://best-toolbox.readthedocs.io/en/latest/>`_.
 
-For more information on this specific project, see the page describing `Wave Detection <https://best-toolbox.readthedocs.io/en/latest/>`_.
+For more information on this specific project, see the page describing `Wave Detection <https://best-toolbox.readthedocs.io/en/latest/feature_extraction.WaveDetector.html>`_.
 
 
 Acknowledgement
