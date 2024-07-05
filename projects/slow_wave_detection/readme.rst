@@ -36,12 +36,12 @@ Example of individual slow wave detections.
 
 
 .. image:: ../../_images/slow_waves_example.png
-   :width: 600
+   :width: 900
 
 Extracted features for the whole night.
 
 .. image:: ../../_images/slope_vaclav.png
-   :width: 600
+   :width: 900
 
 
 Code
