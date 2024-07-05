@@ -52,7 +52,8 @@ import re
 import math
 from datetime import datetime
 import concurrent.futures
-import pickle
+
+from scipy.io import savemat, loadmat
 
 import matplotlib.pyplot as plt
 
@@ -73,7 +74,7 @@ from best import DELIMITER
 # endregion imports
 
 # region FILE_PATH
-DATA_PATH = f'path/to/data.mat'
+DATA_PATH = f'./patient_one_data.mat'
 # endregion FILE_PATH
 
 # region Parameters
@@ -502,8 +503,8 @@ if __name__ == '__main__':
                 mean_frequency, median_frequency, mean_bands, relative_bands
             ]
 
-        # region Save the data to a pickle file for debugging and preparing the data
-        # import pickle
+        # region Save the data to a mat file for debugging and preparing the data
+        # from scipy.io import loadmat
         #
         # data = {
         #     'fzcz': fzcz,
@@ -515,9 +516,9 @@ if __name__ == '__main__':
         # }
         # filename = f'patient_one_data.pkl'
         # savemat(DATA_PATH, data, do_compression=True)
-        # endregion Save the data to a pickle file
+        # endregion Save the data to a mat file
 
-        # region Load the data from a pickle file
+        # region Load the data from a mat file
         # Construct the filename with the epoch number
 
         # Load the data from the file

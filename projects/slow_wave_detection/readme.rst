@@ -30,6 +30,16 @@ Version
 Version 1.0 (2024-06-01) by V. Kremen (Kremen.Vaclav@mayo.edu)
 
 
+Examples
+""""""""""""""""""
+.. image:: ../../_images/1_det.png
+   :width: 300
+
+.. image:: ../../_images/slope_vaclav.pdf
+   :width: 300
+
+
+
 Code
 """"""""""""""""""
 The code is also attached for convenience in here:
@@ -90,7 +100,8 @@ The code is also attached for convenience in here:
     import math
     from datetime import datetime
     import concurrent.futures
-    import pickle
+
+    from scipy.io import savemat, loadmat
 
     import matplotlib.pyplot as plt
 
@@ -110,7 +121,7 @@ The code is also attached for convenience in here:
     # endregion imports
 
     # region FILE_PATH
-    DATA_PATH = f'path/to/data.mat'
+    DATA_PATH = f'./patient_one_data.mat'
     # endregion FILE_PATH
 
     # region Parameters
@@ -525,8 +536,8 @@ The code is also attached for convenience in here:
                     mean_frequency, median_frequency, mean_bands, relative_bands
                 ]
 
-            # region Save the data to a pickle file for debugging and preparing the data
-            # import pickle
+            # region Save the data to a mat file for debugging and preparing the data
+            # from scipy.io import loadmat
             #
             # data = {
             #     'fzcz': fzcz,
@@ -538,9 +549,9 @@ The code is also attached for convenience in here:
             # }
             # filename = f'patient_one_data.pkl'
             # savemat(DATA_PATH, data, do_compression=True)
-            # endregion Save the data to a pickle file
+            # endregion Save the data to a mat file
 
-            # region Load the data from a pickle file
+            # region Load the data from a mat file
             # Construct the filename with the epoch number
 
             # Load the data from the file
