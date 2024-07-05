@@ -66,17 +66,25 @@ from tqdm import tqdm
 from best.files import get_files
 from best.feature_extraction.SpectralFeatures import mean_frequency, median_frequency, mean_bands, relative_bands
 from best.feature_extraction.FeatureExtractor import SleepSpectralFeatureExtractor
-from SlowWaveDetector import SlowWaveDetect # Import the SlowWaveDetect function from SlowWaveDetector.py
+from SlowWaveDetector import SlowWaveDetect  # Import the SlowWaveDetect function from SlowWaveDetector.py
 from best.signal import buffer
 from best import DELIMITER
+
 # endregion imports
 
+# region FILE_PATH
+DATA_PATH = f'path/to/data.mat'
+# endregion FILE_PATH
+
 # region Parameters
-ToPlotFigures = True    # Do you want to print the figures? (True/False)
-ToDoStats = False   # Do you want to perform statistical analysis after you extracted features? (True/False)
+ToPlotFigures = True  # Do you want to print the figures? (True/False)
+ToDoStats = False  # Do you want to perform statistical analysis after you extracted features? (True/False)
 features_path = 'Results_extraction.csv'  # Where are going to be saved the extracted features?
-features_to_plot = ['MEAN_PSD0.5-0.9Hz', 'MEAN_PSD1.0-3.9Hz', 'delta_slope', 'slow_delta_slope']    # Which features to plot?
-plot_wave_images = True    # Do you want to plot the wave images? (True/False)
+features_to_plot = ['MEAN_PSD0.5-0.9Hz', 'MEAN_PSD1.0-3.9Hz', 'delta_slope',
+                    'slow_delta_slope']  # Which features to plot?
+plot_wave_images = True  # Do you want to plot the wave images? (True/False)
+
+
 # endregion parameters
 
 # region Functions
@@ -89,8 +97,8 @@ def process_epoch(x_, x1_, x2_, t_, count, patient_id, hypnogram, fs_hypno, data
     sleep_stage_in_epoch = math.ceil(hypnogram[int(((2 * t_ + 30) / 2) * fs_hypno)])
     epoch_result['sleep_stage'] = sleep_stage_in_epoch
     epoch_result['data_rate'] = (
-        np.sum(data_present[
-            int(t_ * fs_hypno) - 1:int(((t_ + 30) * fs_hypno)) - 1]) / (30 * fs_hypno))
+            np.sum(data_present[
+                   int(t_ * fs_hypno) - 1:int(((t_ + 30) * fs_hypno)) - 1]) / (30 * fs_hypno))
     total_record_time = metadata.loc[metadata['CLINIC'] == patient_id, 'TotalRecordTime'].values
 
     if len(total_record_time) > 0 and t_ / 60 < total_record_time[0]:
@@ -151,13 +159,16 @@ def process_epoch(x_, x1_, x2_, t_, count, patient_id, hypnogram, fs_hypno, data
 
     return count, epoch_result
 
-def run_parallel_processing(xb, xb_01, xb_02, tb, patient_id, hypnogram, fs_hypno, data_present, metadata, fsamp, path_edf):
+
+def run_parallel_processing(xb, xb_01, xb_02, tb, patient_id, hypnogram, fs_hypno, data_present, metadata, fsamp,
+                            path_edf):
     res = pd.DataFrame()
     count = 0
     epoch = 0
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [
-            executor.submit(process_epoch, x_, x1_, x2_, t_, count, patient_id, hypnogram, fs_hypno, data_present, metadata, fsamp, path_edf)
+            executor.submit(process_epoch, x_, x1_, x2_, t_, count, patient_id, hypnogram, fs_hypno, data_present,
+                            metadata, fsamp, path_edf)
             for count, (x_, x1_, x2_, t_) in enumerate(zip(xb, xb_01, xb_02, tb))
         ]
         for future in concurrent.futures.as_completed(futures):
@@ -165,6 +176,7 @@ def run_parallel_processing(xb, xb_01, xb_02, tb, patient_id, hypnogram, fs_hypn
             for key, value in epoch_result.items():
                 res.loc[count, key] = value
     return res
+
 
 def process_file(path_edf):
     filename = path_edf.split(DELIMITER)[-1][:-4]
@@ -191,7 +203,7 @@ def process_file(path_edf):
     patient_id = extract_id(path_edf)
     fzcz = (data.get_data('Fz').squeeze() * 1e6 -
             (((data.get_data('A1').squeeze() * 1e6) + (
-                        data.get_data('A2').squeeze() * 1e6)) / 2))  # Read the EEG data C3 - (A1+A2)/2
+                    data.get_data('A2').squeeze() * 1e6)) / 2))  # Read the EEG data C3 - (A1+A2)/2
     data_present = data.get_data('DataPresent').squeeze()
     hypnogram = data.get_data('Hypnogram').squeeze()  # Read the hypnogram
     fs_hypno = fsamp * len(hypnogram) / len(fzcz)
@@ -243,6 +255,7 @@ def process_file(path_edf):
 
     return res, this_patient_first_row, features_to_plot, fzcz, fsamp, path_edf, hypnogram
 
+
 def butt_filter(signal_to_filter, sampling_frequency_of_signal,
                 lowcut, highcut, order=5, type_of_filter='lowpass'):
     """
@@ -281,6 +294,7 @@ def butt_filter(signal_to_filter, sampling_frequency_of_signal,
     filtered_data = filtfilt(b, a, signal_to_filter)
     return filtered_data
 
+
 def firwin_bandpass_filter(signal_to_filter, sampling_frequency, lowcut, highcut, order=10000):
     """
     Apply a finite impulse response (FIR) bandpass filter to a given signal.
@@ -305,6 +319,7 @@ def firwin_bandpass_filter(signal_to_filter, sampling_frequency, lowcut, highcut
     filtered_data = filtfilt(b, [1], signal_to_filter)
     return filtered_data
 
+
 def calculate_avg_std(group):
     """
     :param group: A pandas DataFrame or Series object representing a group of data.
@@ -314,6 +329,7 @@ def calculate_avg_std(group):
     avg = group.nanmean()
     std = group.nanstd()
     return pd.Series({'Average': avg, 'Standard Deviation': std})
+
 
 def extract_id(path):
     """
@@ -328,6 +344,8 @@ def extract_id(path):
         return int(match.group(1))
     else:
         return None
+
+
 # endregion Functions
 
 def do_stats(path):
@@ -442,8 +460,8 @@ if __name__ == '__main__':
         this_patient_first_row = []
         fsamp = 500  # Sampling rate by default
         columns_of_the_results = ['pt_id', 'start', 'end', 'duration', 'sleep_stage', 'data_rate', 'phase'] \
-
-        # Define how to extract EEG features
+ \
+            # Define how to extract EEG features
         FeatureExtractor = SleepSpectralFeatureExtractor(
             fs=fsamp,
             segm_size=30,
@@ -460,7 +478,8 @@ if __name__ == '__main__':
         warnings.filterwarnings('ignore', category=RuntimeWarning)
         features, feature_names = FeatureExtractor([np.zeros(200)])  # Get the list of features that we will calculate
         warnings.filterwarnings('default', category=RuntimeWarning)
-        columns_of_the_results = columns_of_the_results + feature_names + ['delta_slope', 'delta_pk2pk', 'slow_delta_slope',
+        columns_of_the_results = columns_of_the_results + feature_names + ['delta_slope', 'delta_pk2pk',
+                                                                           'slow_delta_slope',
                                                                            'slow_delta_pk2pk']  # merge both lists
         # Initialize the results dataframe
         res = pd.DataFrame(index=[0],
@@ -468,7 +487,7 @@ if __name__ == '__main__':
         print('Reading the data file: ')
         this_patient_first_row = count
 
-        start = datetime(year=2000, month=1, day=1, hour=0).timestamp() # Dummy start time of the recording
+        start = datetime(year=2000, month=1, day=1, hour=0).timestamp()  # Dummy start time of the recording
 
         # Re-define how to extract EEG features in case fsamp is different
         FeatureExtractor = SleepSpectralFeatureExtractor(
@@ -495,23 +514,21 @@ if __name__ == '__main__':
         #     'fsamp': fsamp,
         # }
         # filename = f'patient_one_data.pkl'
-        # with open(filename, 'wb') as f:
-        #     pickle.dump(data, f)
+        # savemat(DATA_PATH, data, do_compression=True)
         # endregion Save the data to a pickle file
 
         # region Load the data from a pickle file
         # Construct the filename with the epoch number
-        filename = f'patient_one_data.pkl'
+
         # Load the data from the file
-        with open(filename, 'rb') as f:
-            data = pickle.load(f)
+        data = loadmat(DATA_PATH)
         # Extract the variables
-        fzcz = data['fzcz']
-        patient_id = data['patient_id']
-        data_present = data['data_present']
-        hypnogram = data['hypnogram']
-        fs_hypno = data['fs_hypno']
-        fsamp = data['fsamp']
+        fzcz = data['fzcz'][0]
+        patient_id = data['patient_id'][0][0]
+        data_present = data['data_present'][0][0]
+        hypnogram = data['hypnogram'][0]
+        fs_hypno = data['fs_hypno'][0][0]
+        fsamp = data['fsamp'][0][0]
         # endregion Load the data from a pickle file
 
         # region Filtering the signal
@@ -554,7 +571,7 @@ if __name__ == '__main__':
         # Apply filter to the padded signal
         fzcz_padded = lfilter(fir_coeff, 1.0, fzcz_orig_padded)
         # Remove the padded zeros at the beginning and end to match with the length of the original signal
-        fzcz = fzcz_padded[2*n:-2*n]
+        fzcz = fzcz_padded[2 * n:-2 * n]
 
         # region Check filtering
         # # Compute the FFT of the signal 'fzcz'
@@ -579,7 +596,7 @@ if __name__ == '__main__':
         # endregion Check filtering
 
         # Design good steep filter parameters from 0.5 - 0.9Hz - Not used here
-        #numtaps = 19999  # 4999
+        # numtaps = 19999  # 4999
         # *New for bypassing the 0.5-0.9Hz filter by faster speed -> don't use this filter
         numtaps = 99  # Should be for a good filter: 4999. Not used here now so it is 99 for faster processing
         cutoff_low = 0.5  # Lower cutoff frequency in Hz
@@ -610,8 +627,7 @@ if __name__ == '__main__':
         # Apply filter to the padded signal
         fzcz_01_padded = lfilter(fir_coeff, 1.0, fzcz_orig_padded)
         # Remove the padded zeros at the beginning and end to match with the length of the original signal
-        fzcz_01 = fzcz_01_padded[2*n:-2*n]
-
+        fzcz_01 = fzcz_01_padded[2 * n:-2 * n]
 
         # # Design good steep filter parameters from 1 - 3.9Hz
         numtaps = 9999  # For steep filter use 9999
@@ -644,9 +660,9 @@ if __name__ == '__main__':
         fzcz_orig_padded = np.pad(fzcz_orig, (n, n), 'constant')
         # Apply filter to the padded signal
         fzcz_02_padded = lfilter(fir_coeff, 1.0, fzcz_orig_padded)
-        #fzcz = lfilter(fir_coeff, 1.0, fzcz_orig_padded)
+        # fzcz = lfilter(fir_coeff, 1.0, fzcz_orig_padded)
         # Remove the padded zeros at the beginning and end to match with the length of the original signal
-        fzcz_02 = fzcz_02_padded[2*n:-2*n]
+        fzcz_02 = fzcz_02_padded[2 * n:-2 * n]
 
         # region Check filtering
         # # Compute the FFT of the signal 'fzcz'
@@ -676,12 +692,12 @@ if __name__ == '__main__':
         xo = buffer(fzcz_orig, fs=fsamp, segm_size=30)  # Buffer the data to 30 sec epochs
         xb = buffer(fzcz, fs=fsamp, segm_size=30)  # Buffer the data to 30 sec epochs for 0.5-30Hz band
         xb_01 = buffer(fzcz_01, fs=fsamp, segm_size=30)  # Buffer the data to 30 sec epochs for 0.5-0.9Hz band
-        xb_02 = buffer(fzcz_02, fs=fsamp, segm_size=30) # Buffer the data to 30 sec epochs for 1-3.9Hz band
+        xb_02 = buffer(fzcz_02, fs=fsamp, segm_size=30)  # Buffer the data to 30 sec epochs for 1-3.9Hz band
         tb = buffer(t, fs=fsamp, segm_size=30)[:, 0]  # Buffer the time vector to 30 sec epochs
         epoch = 0  # Epoch counter
         print(f'Detecting wave properties at Fz-(A1+A2)/2')
         # region Loop over all epochs
-        for (x_, x1_, x2_, xo_,t_) in zip(xb, xb_01, xb_02, xo, tb):
+        for (x_, x1_, x2_, xo_, t_) in zip(xb, xb_01, xb_02, xo, tb):
             epoch = epoch + 1  # Increment epoch counter
             res.loc[count, 'pt_id'] = patient_id
             res.loc[count, 'start'] = t_
@@ -812,11 +828,13 @@ if __name__ == '__main__':
                 file_name = f'{directory}\\{epoch}_EEG_extremes_{sleep_stages[sleep_stage_in_epoch]}_Delta_{date_time}.pdf'
                 if results is None:
                     # If there were no Slow Oscillations detected, then try to detect Delta waves only
-                    results = SlowWaveDetect(x2__, x__, fsamp, 0.5, 0.12, 5, file_name, sleep_stages[sleep_stage_in_epoch],
+                    results = SlowWaveDetect(x2__, x__, fsamp, 0.5, 0.12, 5, file_name,
+                                             sleep_stages[sleep_stage_in_epoch],
                                              epoch, None, None, plot_wave_images)
                 else:
                     # If there were Slow Oscillations detected, then try to detect non-overlapping (500 msec distant) Delta waves
-                    results = SlowWaveDetect(x2__, x__, fsamp, 0.5, 0.12, 5, file_name, sleep_stages[sleep_stage_in_epoch],
+                    results = SlowWaveDetect(x2__, x__, fsamp, 0.5, 0.12, 5, file_name,
+                                             sleep_stages[sleep_stage_in_epoch],
                                              epoch, slow_waves, 0.5, plot_wave_images)
 
                 if results is None:
